@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 // 26145 출제비 제분배
-public class Main {
+public class Main1 {
   public static void main(String[] args) throws IOException {
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine(), " ");
