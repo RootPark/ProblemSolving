@@ -1,4 +1,4 @@
-package Arrays;
+package Array;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,21 +13,19 @@ public class Main1 {
       arr[i] = Integer.parseInt(bufferedReader.readLine());
     }
 
-    int answer = 0;
-
-    for (int i = 0; i < 10; i++) {
-      answer += arr[i];
-      if (answer > 100) {
-        if(answer-100 <= 100-(answer-arr[i])){
+    int sum = 0;
+    for(int i=0;i<10;i++){
+      sum+=arr[i];
+      if(sum>100){
+        if(sum - 100 <= 100 - (sum-arr[i])){
           break;
         }
         else{
-          answer-=arr[i];
+          sum-=arr[i];
           break;
         }
       }
     }
-
-    System.out.println(answer);
+    System.out.println(sum);
   }
 }
