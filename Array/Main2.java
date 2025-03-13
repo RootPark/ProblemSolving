@@ -21,14 +21,13 @@ public class Main2 {
       arr[i] = Integer.parseInt(stringTokenizer.nextToken());
     }
 
-    int[] prefixSum = new int[N+1];
+    int[] prefixSum = new int[N + 1];
 
-    for (int i = 0; i < N+1; i++) {
-      if(i==0){
+    for (int i = 0; i < N + 1; i++) {
+      if (i == 0) {
         prefixSum[i] = 0;
-      }
-      else{
-        prefixSum[i] = arr[i-1] + prefixSum[i-1];
+      } else {
+        prefixSum[i] = arr[i - 1] + prefixSum[i - 1];
       }
     }
 
@@ -37,7 +36,7 @@ public class Main2 {
       int start = Integer.parseInt(stringTokenizer.nextToken());
       int end = Integer.parseInt(stringTokenizer.nextToken());
 
-      int answer = prefixSum[end] - prefixSum[start-1];
+      int answer = prefixSum[end] - prefixSum[start - 1];
       stringBuilder.append(answer).append("\n");
     }
 
