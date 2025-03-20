@@ -29,7 +29,6 @@ public class Main2 {
 
     stringTokenizer = new StringTokenizer(bufferedReader.readLine());
 
-    int count = 0;
     for(int i=0;i<M;i++){
       int num = Integer.parseInt(stringTokenizer.nextToken());
       stringBuilder.append(upperBound(num)-lowerBound(num)).append(' ');
