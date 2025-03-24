@@ -18,7 +18,7 @@ public class Main7 {
     long[] remainderSum = new long[N+1];
     long[] remainderCount = new long[M];
 
-    int count = 0;
+    long count = 0;
 
     stringTokenizer = new StringTokenizer(bufferedReader.readLine());
     for(int i=0;i<N;i++){
