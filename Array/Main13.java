@@ -24,7 +24,6 @@ public class Main13 {
     int min = Integer.MAX_VALUE;
     while (left < right) {
       int num = arr[left] + arr[right];
-      //System.out.println(num);
       if(Math.abs(num) < Math.abs(min)){
         min = num;
       }
