@@ -8,20 +8,21 @@ import java.util.StringTokenizer;
 public class Main1 {
   public static void main(String[] args) throws IOException{
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    int T = Integer.parseInt(bufferedReader.readLine());
+    StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
 
-    
-    for(int i = 0; i < T; i++){
-      StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+    int T = Integer.parseInt(stringTokenizer.nextToken());
+
+    for(int i=0;i<T;i++){
+      stringTokenizer = new StringTokenizer(bufferedReader.readLine());
       int N = Integer.parseInt(stringTokenizer.nextToken());
       int M = Integer.parseInt(stringTokenizer.nextToken());
-
-      for(int j = 0; j < M ; j++){
+      for(int j=0;j<M;j++){
         stringTokenizer = new StringTokenizer(bufferedReader.readLine());
         int a = Integer.parseInt(stringTokenizer.nextToken());
         int b = Integer.parseInt(stringTokenizer.nextToken());
       }
       System.out.println(N-1);
+
     }
   }
 }
