@@ -1,79 +1,79 @@
 package Tree;
-import java.io.*;
-import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
 
 public class Main2 {
 
-  static Map<Character, Node> tree = new HashMap<>();
+    static int distance[][];
+    static boolean visited[];
+    static int [][] node;
 
-  public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int N = Integer.parseInt(br.readLine());
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    for (int i = 0; i < N; i++) {
-      StringTokenizer st = new StringTokenizer(br.readLine());
-      char data = st.nextToken().charAt(0);
-      char left = st.nextToken().charAt(0);
-      char right = st.nextToken().charAt(0);
+        int nodeNum = Integer.parseInt(st.nextToken());
+        int wantNum = Integer.parseInt(st.nextToken());
 
-      // 현재 노드가 없으면 새로 생성
-      tree.putIfAbsent(data, new Node(data));
+        node = new int [nodeNum+1][nodeNum+1];
+        distance = new int[nodeNum+1][nodeNum+1];
 
-      Node current = tree.get(data);
+        // init Node
+        for(int i=0; i<nodeNum-1; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int dis = Integer.parseInt(st.nextToken());
+            node[a][b] = 1;
+            node[b][a] = 1;
+            distance[a][b] = dis;
+            distance[b][a] = dis;
+        }
 
-      if (left != '.') {
-        tree.putIfAbsent(left, new Node(left));
-        current.left = tree.get(left);
-      }
-
-      if (right != '.') {
-        tree.putIfAbsent(right, new Node(right));
-        current.right = tree.get(right);
-      }
+        // start bfs
+        for(int i=0; i<wantNum; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b=  Integer.parseInt(st.nextToken());
+            bfs(a, b, nodeNum);
+        }
     }
 
-    Node root = tree.get('A');
-    StringBuilder sb = new StringBuilder();
-    preOrder(root, sb);
-    System.out.println(sb.toString());
+    public static void bfs(int start, int end, int nodeNum){
+        Queue<Integer> queue = new LinkedList<>();
+        visited = new boolean[nodeNum+1];
 
-    sb.setLength(0);
-    inOrder(root, sb);
-    System.out.println(sb.toString());
+        visited[start] = true;
+        queue.add(start);
+        int ans[] = new int[nodeNum+1];
 
-    sb.setLength(0);
-    postOrder(root, sb);
-    System.out.println(sb.toString());
-  }
+        while(!queue.isEmpty()){
+            int cur = queue.poll();
 
-  static void preOrder(Node node, StringBuilder sb) {
-    if (node == null) return;
-    sb.append(node.data);
-    preOrder(node.left, sb);
-    preOrder(node.right, sb);
-  }
+            for(int i=1; i<=nodeNum; i++){
 
-  static void inOrder(Node node, StringBuilder sb) {
-    if (node == null) return;
-    inOrder(node.left, sb);
-    sb.append(node.data);
-    inOrder(node.right, sb);
-  }
+                if(node[cur][i] == 1 && !visited[i]){       // 만약 연결되어 있고 방문하지 않은 노드이면
+                    ans[i] += distance[cur][i] + ans[cur];  // 거리를 갱신해준다.
 
-  static void postOrder(Node node, StringBuilder sb) {
-    if (node == null) return;
-    postOrder(node.left, sb);
-    postOrder(node.right, sb);
-    sb.append(node.data);
-  }
-}
+                    if(i == end){           // 만약 마지막 노드이면 종료
+                        System.out.println(ans[end]);
+                        return;
+                    }
 
-class Node {
-  char data;
-  Node left;
-  Node right;
+                    queue.add(i);
+                    visited[i] = true;
+                }
+            }
+        }
 
-  Node(char data) {
-    this.data = data;
-  }
+    }
+
+
+
 }
