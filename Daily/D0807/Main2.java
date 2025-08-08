@@ -3,75 +3,104 @@ package Daily.D0807;
 import java.io.*;
 import java.util.StringTokenizer;
 
-// swea
-// 5215
+/**
+ * SWEA 5215 햄버거 다이어트
+ * 1. 테스트 케이스 개수를 입력받는다.
+ * 2. 각 테스트 케이스마다,
+ * 2-1. 재료의 개수와 제한 칼로리를 입력받는다.
+ * 2-2. 재료의 개수만큼, 각 재료의 점수와 칼로리를 입력받는다.
+ * 
+ * 3. 조합을 구현한다.
+ * 3-1-1. 점수와 칼로리를 합산한다.
+ * 3-1-2. 제한 칼로리를 넘어가는지 확인하고,
+ * 3-1-2-1. 칼로리를 넘어가지 않으면, 점수가 더 높으면 갱신.
+ * 4. 가장 높은 점수를 출력한다.
+ */
 
 public class Main2 {
 
-    static int numOfIngredients;
-    static int limitCal;
-    static int numOfComb;
-    static int[][] data;
-    static int[][] choice;
-    static int maxPoint = 0;
+    static StringTokenizer st;
+    static BufferedReader br;
+    static StringBuilder sb;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
+    static int foodCount, limitCalories;
+    static int[][] foodInfoArray;
+    static int[][] selectedFoodArray;
 
-        int testCase = Integer.parseInt(br.readLine());
+    static final int SCORE = 0, CALORIE = 1;
+    static int bestScore = 0;
 
-        for (int t = 1; t <= testCase; t++) {
+    public static void inputTestCase() throws IOException {
+        // 2-1. 재료의 개수와 제한 칼로리를 입력받는다.
+        st = new StringTokenizer(br.readLine().trim());
+        foodCount = Integer.parseInt(st.nextToken());
+        limitCalories = Integer.parseInt(st.nextToken());
+
+        // 2-2. 재료의 개수만큼, 각 재료의 점수와 칼로리를 입력받는다.
+        foodInfoArray = new int[foodCount][2];
+        for (int foodIndex = 0; foodIndex < foodCount; foodIndex++) {
             st = new StringTokenizer(br.readLine());
-            numOfIngredients = Integer.parseInt(st.nextToken());
-            limitCal = Integer.parseInt(st.nextToken());
-            data = new int[numOfIngredients][2];
-
-            for (int numOfIngredient = 0; numOfIngredient < numOfIngredients; numOfIngredient++) {
-                st = new StringTokenizer(br.readLine());
-                data[numOfIngredient][0] = Integer.parseInt(st.nextToken());
-                data[numOfIngredient][1] = Integer.parseInt(st.nextToken());
-            }
-            for (numOfComb = 1; numOfComb <= numOfIngredients; numOfComb++) {
-                choice = new int[numOfComb][2];
-                combination(0, 0);
-            }
-
-            sb.append("#").append(t).append(" ").append(maxPoint).append("\n");
+            foodInfoArray[foodIndex][SCORE] = Integer.parseInt(st.nextToken());
+            foodInfoArray[foodIndex][CALORIE] = Integer.parseInt(st.nextToken());
         }
-        System.out.println(sb);
-
     }
 
     public static void combination(int elementIndex, int selectIndex) {
-        if (selectIndex == numOfComb) {
-            int sumOfCal = 0;
-            int sumOfPoint = 0;
-            for (int i = 0; i < choice.length; i++) {
-                sumOfCal += choice[i][1];
-                sumOfPoint += choice[i][0];
+        // 3-1-1. 점수와 칼로리를 합산한다.
+        if (selectIndex == selectedFoodArray.length) {
+            int tmpSumScore = 0;
+            int tmpSumCalorie = 0;
+
+            for (int index = 0; index < selectedFoodArray.length; index++) {
+                tmpSumCalorie += selectedFoodArray[index][CALORIE];
+                tmpSumScore += selectedFoodArray[index][SCORE];
             }
-            if (sumOfCal <= limitCal) {
-                if (sumOfPoint > maxPoint) {
-                    maxPoint = sumOfPoint;
+
+            if (tmpSumCalorie <= limitCalories) {
+                // 3-1-2. 제한 칼로리를 넘어가는지 확인하고,
+                if(tmpSumScore > bestScore) {
+                    // 3-1-2-1. 칼로리를 넘어가지 않으면, 점수가 더 높으면 갱신.
+                    bestScore = tmpSumScore;
                 }
             }
             return;
         }
-
-        if (elementIndex == numOfIngredients) {
+        if (elementIndex == foodCount) {
             return;
         }
 
-        choice[selectIndex][0] = data[elementIndex][0];
-        choice[selectIndex][1] = data[elementIndex][1];
+        selectedFoodArray[selectIndex][SCORE] = foodInfoArray[elementIndex][SCORE];
+        selectedFoodArray[selectIndex][CALORIE] = foodInfoArray[elementIndex][CALORIE];
 
         combination(elementIndex + 1, selectIndex + 1);
 
-        choice[selectIndex][0] = 0;
-        choice[selectIndex][1] = 0;
+        selectedFoodArray[selectIndex][SCORE] = -1;
+        selectedFoodArray[selectIndex][CALORIE] = -1;
 
         combination(elementIndex + 1, selectIndex);
     }
+
+    public static void main(String[] args) throws IOException {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
+
+        // 1. 테스트 케이스 개수를 입력받는다.
+        int testCase = Integer.parseInt(br.readLine().trim());
+
+        for (int t = 1; t <= testCase; t++) {
+            bestScore = Integer.MIN_VALUE;
+            inputTestCase();
+            // 3. 조합을 구현한다.
+
+            for (int combCount = 1; combCount <= foodCount; combCount++) {
+                selectedFoodArray = new int[combCount][2];
+                combination(0, 0);
+            }
+            // 4. 가장 높은 점수를 출력한다.
+
+            sb.append("#").append(t).append(" ").append(bestScore).append("\n");
+        }
+        System.out.println(sb);
+    }
 }
+
