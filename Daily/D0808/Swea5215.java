@@ -1,4 +1,4 @@
-package Daily.D0807;
+package Daily.D0808;
 
 import java.io.*;
 import java.util.StringTokenizer;
@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
  * 4. 가장 높은 점수를 출력한다.
  */
 
-public class Main2 {
+public class Swea5215 {
 
     static StringTokenizer st;
     static BufferedReader br;
@@ -26,6 +26,7 @@ public class Main2 {
     static int foodCount, limitCalories;
     static int[][] foodInfoArray;
     static int[][] selectedFoodArray;
+    static boolean[] isSelected;
 
     static final int SCORE = 0, CALORIE = 1;
     static int bestScore = 0;
@@ -80,6 +81,33 @@ public class Main2 {
         combination(elementIndex + 1, selectIndex);
     }
 
+    public static void powerSet(int selectIndex) {
+        if (selectIndex == foodCount) {
+            int tmpSumScore = 0;
+            int tmpSumCalorie = 0;
+
+            for (int index = 0; index < foodCount; index++) {
+                if(isSelected[index]) {
+                    tmpSumCalorie += foodInfoArray[index][CALORIE];
+                    tmpSumScore += foodInfoArray[index][SCORE];
+                }
+            }
+
+            if (tmpSumCalorie <= limitCalories) {
+                if(tmpSumScore > bestScore) {
+                    bestScore = tmpSumScore;
+                }
+            }
+            return;
+        }
+
+        isSelected[selectIndex] = true; // 재료로 선택을 했다.
+        powerSet(selectIndex+1);
+        isSelected[selectIndex] = false; // 재료로 선택을 안했다.
+        powerSet(selectIndex+1);
+
+    }
+
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         sb = new StringBuilder();
@@ -90,12 +118,16 @@ public class Main2 {
         for (int t = 1; t <= testCase; t++) {
             bestScore = Integer.MIN_VALUE;
             inputTestCase();
-            // 3. 조합을 구현한다.
+            
+            // + 부분집합을 구현한다.
+            isSelected = new boolean[foodCount];
+            powerSet(0);
 
-            for (int combCount = 1; combCount <= foodCount; combCount++) {
-                selectedFoodArray = new int[combCount][2];
-                combination(0, 0);
-            }
+            // 3. 조합을 구현한다.
+            // for (int combCount = 1; combCount <= foodCount; combCount++) {
+            //     selectedFoodArray = new int[combCount][2];
+            //     combination(0, 0);
+            // }
             // 4. 가장 높은 점수를 출력한다.
 
             sb.append("#").append(t).append(" ").append(bestScore).append("\n");

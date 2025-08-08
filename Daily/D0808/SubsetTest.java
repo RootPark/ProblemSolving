@@ -21,7 +21,7 @@ public class SubsetTest {
 
     // cnt : 다룬 원소개수, setCnt : 부분집합을 구성하고 있는 원소 개수
     private static void generateSubset(int cnt, int setCnt) { // 해당 원소를 부분집합의 구성으로 포함/비포함 처리
-        //기본파트(기저)
+        // 기본파트(기저)
         if(cnt==N) { // 마지막 원소까지 모두 고려헀다면
             System.out.print("부분집합의 원소 개수 : "+setCnt+" ==> ");
             for(int i=0;i<N;i++) { // 부분집합의 구성요소만 뽑기
@@ -31,12 +31,12 @@ public class SubsetTest {
             return;
         }
 
-        //유도파티
-        //해당 원소 부분집합에 넣기
-
+        // 유도파트
+        // 해당 원소 부분집합에 넣기
         isSelected[cnt] = true;
         generateSubset(cnt+1, setCnt+1);
 
+        // 해당 원소 부분집합에 넣지 않기
         isSelected[cnt] = false;
         generateSubset(cnt+1, setCnt);
         
