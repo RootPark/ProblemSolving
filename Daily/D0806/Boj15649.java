@@ -3,7 +3,7 @@ package Daily.D0806;
 import java.io.*;
 import java.util.*;
 
-public class Main1 {
+public class Boj15649 {
 
     static int[] permutation;
     static boolean[] visited;
