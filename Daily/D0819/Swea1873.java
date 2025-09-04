@@ -28,6 +28,15 @@ public class Swea1873 {
     static int HEIGHT;
     static int WIDTH;
     static char[][] map;
+    static int COMMAND_LENGTH;
+    static String commands;
+
+    static char[] tank = { '^', 'v', '<', '>' };
+
+    static int position_x;
+    static int position_y;
+
+    static String answer;
 
     static StringTokenizer st;
     static StringBuilder sb = new StringBuilder();
@@ -43,13 +52,165 @@ public class Swea1873 {
             WIDTH = Integer.parseInt(st.nextToken());
 
             map = new char[HEIGHT][WIDTH];
+            answer = "";
 
             for (int heightIndex = 0; heightIndex < HEIGHT; heightIndex++) {
                 String line = br.readLine();
                 for (int widthIndex = 0; widthIndex < WIDTH; widthIndex++) {
                     map[heightIndex][widthIndex] = line.charAt(widthIndex);
+                    char command = map[heightIndex][widthIndex];
+                    if (command == tank[0] || command == tank[1] || command == tank[2] || command == tank[3]) {
+                        position_x = heightIndex;
+                        position_y = widthIndex;
+                    }
                 }
             }
+
+            COMMAND_LENGTH = Integer.parseInt(br.readLine());
+            commands = br.readLine();
+
+            for (int commandIndex = 0; commandIndex < commands.length(); commandIndex++) {
+                char command = commands.charAt(commandIndex);
+                switch (command) {
+                    case 'U':
+                        up();
+                        break;
+                    case 'D':
+                        down();
+                        break;
+                    case 'L':
+                        left();
+                        break;
+                    case 'R':
+                        right();
+                        break;
+                    case 'S':
+                        shoot();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            for (int heightIndex = 0; heightIndex < HEIGHT; heightIndex++) {
+                for (int widthIndex = 0; widthIndex < WIDTH; widthIndex++) {
+                    answer += map[heightIndex][widthIndex];
+                }
+                answer += '\n';
+            }
+            sb.append("#").append(t).append(" ").append(answer);
+        }
+        System.out.println(sb);
+    }
+
+    public static void shoot() {
+        if (map[position_x][position_y] == tank[0]) {
+            shootUp();
+        }
+        if (map[position_x][position_y] == tank[1]) {
+            shootDown();
+        }
+        if (map[position_x][position_y] == tank[2]) {
+            shootLeft();
+        }
+        if (map[position_x][position_y] == tank[3]) {
+            shootRight();
+        }
+    }
+
+    public static void shootUp() {
+        int index_x = position_x - 1;
+        while (index_x >= 0) {
+            char object = map[index_x][position_y];
+            if (object == '#') {
+                break;
+            }
+            if (object == '*') {
+                map[index_x][position_y] = '.';
+                break;
+            }
+            index_x--;
+        }
+    }
+
+    public static void shootDown() {
+        int index_x = position_x + 1;
+        while (index_x < HEIGHT) {
+            char object = map[index_x][position_y];
+            if (object == '#') {
+                break;
+            }
+            if (object == '*') {
+                map[index_x][position_y] = '.';
+                break;
+            }
+            index_x++;
+        }
+    }
+
+    public static void shootLeft() {
+        int index_y = position_y - 1;
+        while (index_y >= 0) {
+            char object = map[position_x][index_y];
+            if (object == '#') {
+                break;
+            }
+            if (object == '*') {
+                map[position_x][index_y] = '.';
+                break;
+            }
+            index_y--;
+        }
+    }
+
+    public static void shootRight() {
+        int index_y = position_y + 1;
+        while (index_y < WIDTH) {
+            char object = map[position_x][index_y];
+            if (object == '#') {
+                break;
+            }
+            if (object == '*') {
+                map[position_x][index_y] = '.';
+                break;
+            }
+            index_y++;
+        }
+    }
+
+    public static void up() {
+        map[position_x][position_y] = tank[0];
+        if (position_x > 0 && map[position_x - 1][position_y] == '.') {
+            map[position_x][position_y] = '.';
+            map[position_x - 1][position_y] = tank[0];
+            position_x -= 1;
+        }
+    }
+
+    public static void down() {
+        map[position_x][position_y] = tank[1];
+        if (position_x < HEIGHT-1 && map[position_x + 1][position_y] == '.') {
+            map[position_x][position_y] = '.';
+            map[position_x + 1][position_y] = tank[1];
+            position_x += 1;
+        }
+    }
+
+    public static void left() {
+        map[position_x][position_y] = tank[2];
+        if (position_y > 0 && map[position_x][position_y - 1] == '.') {
+            map[position_x][position_y] = '.';
+            map[position_x][position_y - 1] = tank[2];
+            position_y -= 1;
+        }
+    }
+
+    public static void right() {
+        map[position_x][position_y] = tank[3];
+        if (position_y < WIDTH-1 && map[position_x][position_y + 1] == '.') {
+            map[position_x][position_y] = '.';
+            map[position_x][position_y + 1] = tank[3];
+            position_y += 1;
         }
     }
 }
