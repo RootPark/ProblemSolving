@@ -47,6 +47,15 @@ public class Swea2382 {
             for (int time = 0; time < TIME; time++) {
                 map = new Micro[SIZE][SIZE];
 
+                int[][] sum = new int[SIZE][SIZE];
+                int[][] maxNum = new int[SIZE][SIZE];
+                int[][] maxIdx = new int[SIZE][SIZE];
+                for (int i = 0; i < SIZE; i++) {
+                    for (int j = 0; j < SIZE; j++) {
+                        maxIdx[i][j] = -1;
+                    }
+                }
+
                 for (int microIndex = 0; microIndex < NUM; microIndex++) {
                     Micro current = micros[microIndex];
 
@@ -54,56 +63,50 @@ public class Swea2382 {
                         continue;
                     }
 
-                    current.x += delta_x[current.direction];
-                    current.y += delta_y[current.direction];
+                    int nx = current.x + delta_x[current.direction];
+                    int ny = current.y + delta_y[current.direction];
 
-                    if (isEdge(current.x, current.y)) {
+                    if (isEdge(nx, ny)) {
                         current.num /= 2;
-
                         if (current.num == 0) {
                             current.isDead = true;
+                            current.x = nx;
+                            current.y = ny;
                             continue;
                         }
-                        if (current.direction == 1) {
-                            current.direction = 2;
-                        }
-                        if (current.direction == 2) {
-                            current.direction = 1;
-                        }
-                        if (current.direction == 3) {
-                            current.direction = 4;
-                        }
-                        if (current.direction == 4) {
-                            current.direction = 3;
-                        }
+                        current.direction = reverse(current.direction);
                     }
+                    current.x = nx;
+                    current.y = ny;
 
-                    if (map[current.x][current.y] == null) {
-                        map[current.x][current.y] = current;
+                    sum[current.x][current.y] += current.num;
+                    if (current.num > maxNum[current.x][current.y]) {
+                        maxNum[current.x][current.y] = current.num;
+                        maxIdx[current.x][current.y] = microIndex;
+                    }
+                }
+                
+                for (int microIndex = 0; microIndex < NUM; microIndex++) {
+                    Micro current = micros[microIndex];
+                    if (current.num == 0 || current.isDead)
+                        continue;
+
+                    int x = current.x;
+                    int y = current.y;
+
+                    if (maxIdx[x][y] == microIndex) {
+                        current.num = sum[x][y]; 
                     } else {
-                        Micro pre = map[current.x][current.y];
-
-                        if (pre.num > current.num) {
-                            pre.num += current.num;
-                            current.num = 0;
-                            current.isDead = true;
-                        } else {
-                            current.num += pre.num;
-                            map[current.x][current.y] = current;
-                            pre.num = 0;
-                            pre.isDead = true;
-                        }
+                        current.num = 0;
+                        current.isDead = true;
                     }
                 }
+
             }
 
-            for (int index_x = 0; index_x < SIZE; index_x++) {
-                for (int index_y = 0; index_y < SIZE; index_y++) {
-                    if (map[index_x][index_y] != null) {
-                        answer += map[index_x][index_y].num;
-                    }
-                }
-            }
+            int answer = 0;
+            for (Micro m : micros)
+                answer += m.num;
             sb.append('#').append(t).append(' ').append(answer).append('\n');
         }
         System.out.println(sb);
@@ -112,11 +115,16 @@ public class Swea2382 {
     public static boolean isEdge(int x, int y) {
         return x == 0 || y == 0 || x == SIZE - 1 || y == SIZE - 1;
     }
+
+    public static int reverse(int d) {
+        return (d == 1) ? 2 : (d == 2) ? 1 : (d == 3) ? 4 : 3;
+    }
 }
 
 class Micro {
     int x, y, num, direction;
     boolean isDead;
+
     public Micro(int x, int y, int num, int direction) {
         this.x = x;
         this.y = y;
